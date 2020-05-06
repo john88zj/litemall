@@ -1,5 +1,6 @@
 package org.linlinjava.litemall.wx.web;
 
+import org.apache.commons.collections.MapUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.linlinjava.litemall.core.system.SystemConfig;
@@ -52,6 +53,9 @@ public class WxHomeController {
 
     @Autowired
     private LitemallCouponService couponService;
+
+    @Autowired
+    private LitemallSystemConfigService systemConfigService;
 
     private final static ArrayBlockingQueue<Runnable> WORK_QUEUE = new ArrayBlockingQueue<>(9);
 
@@ -182,13 +186,21 @@ public class WxHomeController {
      */
     @GetMapping("/about")
     public Object about() {
+
+        Map<String,String> mallConfig= systemConfigService.listMail();
         Map<String, Object> about = new HashMap<>();
-        about.put("name", SystemConfig.getMallName());
-        about.put("address", SystemConfig.getMallAddress());
-        about.put("phone", SystemConfig.getMallPhone());
-        about.put("qq", SystemConfig.getMallQQ());
-        about.put("longitude", SystemConfig.getMallLongitude());
-        about.put("latitude", SystemConfig.getMallLatitude());
+//        about.put("name", SystemConfig.getMallName());
+//        about.put("address", SystemConfig.getMallAddress());
+//        about.put("phone", SystemConfig.getMallPhone());
+//        about.put("qq", SystemConfig.getMallQQ());
+//        about.put("longitude", SystemConfig.getMallLongitude());
+//        about.put("latitude", SystemConfig.getMallLatitude());
+        about.put("name", MapUtils.getString(mallConfig,"litemall_mall_name",SystemConfig.getMallName()));
+        about.put("address", MapUtils.getString(mallConfig,"litemall_mall_address",SystemConfig.getMallAddress()));
+        about.put("phone", MapUtils.getString(mallConfig,"litemall_mall_phone",SystemConfig.getMallPhone()));
+        about.put("qq", MapUtils.getString(mallConfig,"litemall_mall_qq",SystemConfig.getMallQQ()));
+        about.put("longitude", MapUtils.getString(mallConfig,"litemall_mall_longitude",SystemConfig.getMallLongitude()));
+        about.put("latitude", MapUtils.getString(mallConfig,"litemall_mall_latitude",SystemConfig.getMallLatitude()));
         return ResponseUtil.ok(about);
     }
 }
