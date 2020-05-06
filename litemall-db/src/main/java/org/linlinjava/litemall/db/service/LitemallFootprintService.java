@@ -44,7 +44,7 @@ public class LitemallFootprintService {
         LitemallFootprint curFootprint = footprintMapper.selectOneByExample(example);
         if(curFootprint != null){
             curFootprint.setUpdateTime(LocalDateTime.now());
-            footprintMapper.updateByPrimaryKeySelective(footprint);
+            footprintMapper.updateByPrimaryKeySelective(curFootprint);
         }else{
             footprint.setAddTime(LocalDateTime.now());
             footprint.setUpdateTime(LocalDateTime.now());
