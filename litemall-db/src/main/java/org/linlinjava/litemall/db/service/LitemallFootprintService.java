@@ -39,9 +39,17 @@ public class LitemallFootprintService {
     }
 
     public void add(LitemallFootprint footprint) {
-        footprint.setAddTime(LocalDateTime.now());
-        footprint.setUpdateTime(LocalDateTime.now());
-        footprintMapper.insertSelective(footprint);
+        LitemallFootprintExample example = new LitemallFootprintExample();
+        example.or().andGoodsIdEqualTo(footprint.getGoodsId()).andUserIdEqualTo(footprint.getUserId()).andDeletedEqualTo(false);
+        LitemallFootprint curFootprint = footprintMapper.selectOneByExample(example);
+        if(curFootprint != null){
+            curFootprint.setUpdateTime(LocalDateTime.now());
+            footprintMapper.updateByPrimaryKeySelective(footprint);
+        }else{
+            footprint.setAddTime(LocalDateTime.now());
+            footprint.setUpdateTime(LocalDateTime.now());
+            footprintMapper.insertSelective(footprint);
+        }
     }
 
     public List<LitemallFootprint> querySelective(String userId, String goodsId, Integer page, Integer size, String sort, String order) {
